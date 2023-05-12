@@ -15,31 +15,40 @@ package org.eclipse.cdt.lsp.editor.ui.commands;
 import java.net.URI;
 import java.util.Optional;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import org.eclipse.cdt.lsp.LspPlugin;
+import org.eclipse.cdt.lsp.editor.ResolveUri;
 import org.eclipse.cdt.lsp.editor.ui.LspEditorUiPlugin;
 import org.eclipse.cdt.lsp.services.ClangdLanguageServer;
-import org.eclipse.core.commands.AbstractHandler;
-import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.runtime.Adapters;
+import org.eclipse.e4.core.di.annotations.Execute;
+import org.eclipse.e4.ui.model.application.ui.basic.MPart;
+import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.lsp4j.TextDocumentIdentifier;
-import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IFileEditorInput;
-import org.eclipse.ui.IURIEditorInput;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.statushandlers.StatusManager;
 import org.eclipse.ui.texteditor.ITextEditor;
 
-public class ToggleSourceAndHeaderCommandHandler extends AbstractHandler implements IHandler {
-	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException {
-		return execute(HandlerUtil.getActiveEditor(event));
+public final class ToggleSourceAndHeaderCommandHandler {
+
+	/*
+	 * AF: here we inject the implementation as a field, 
+	 * but we also can extract it from MPart 
+	 * or declare it as another argument for `Execute` method 
+	 */
+	@Inject
+	private ResolveUri resolve;
+	
+	@Execute
+	public void toggle(@Named(IServiceConstants.ACTIVE_PART) MPart part) {
+		execute(part.getContext().get(IEditorPart.class));
+		
 	}
 
 	@SuppressWarnings("restriction")
@@ -49,7 +58,7 @@ public class ToggleSourceAndHeaderCommandHandler extends AbstractHandler impleme
 		IEditorPart innerEditor = Optional.ofNullable((IEditorPart) Adapters.adapt(activeEditor, ITextEditor.class))
 				.orElse(activeEditor);
 
-		getUri(innerEditor).ifPresent(fileUri -> {
+		resolve.resolve(innerEditor).ifPresent(fileUri -> {
 			IDocument document = org.eclipse.lsp4e.LSPEclipseUtils.getDocument(innerEditor.getEditorInput());
 			org.eclipse.lsp4e.LanguageServers.forDocument(document)
 					.computeFirst(
@@ -62,25 +71,6 @@ public class ToggleSourceAndHeaderCommandHandler extends AbstractHandler impleme
 		});
 
 		return null;
-	}
-
-	/**
-	 * Returns the URI of the given editor depending on the type of its
-	 * {@link IEditorPart#getEditorInput()}.
-	 * 
-	 * @return the URI or an empty {@link Optional} if the URI couldn't be
-	 *         determined.
-	 */
-	private static Optional<URI> getUri(IEditorPart editor) {
-		IEditorInput editorInput = editor.getEditorInput();
-
-		if (editorInput instanceof IFileEditorInput) {
-			return Optional.of(((IFileEditorInput) editor.getEditorInput()).getFile().getLocationURI());
-		} else if (editorInput instanceof IURIEditorInput) {
-			return Optional.of(((IURIEditorInput) editorInput).getURI());
-		} else {
-			return Optional.empty();
-		}
 	}
 
 	private static void openEditor(IWorkbenchPage page, URI fileUri) {

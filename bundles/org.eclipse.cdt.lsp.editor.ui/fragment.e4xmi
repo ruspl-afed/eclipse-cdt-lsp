@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="ASCII"?>
+<fragment:ModelFragments xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:commands="http://www.eclipse.org/ui/2010/UIModel/application/commands" xmlns:fragment="http://www.eclipse.org/ui/2010/UIModel/fragment" xmi:id="_3tZfsPDIEe2AMplUbq0MIQ">
+  <fragments xsi:type="fragment:StringModelFragment" xmi:id="__5GV0PDIEe2AMplUbq0MIQ" featurename="commands" parentElementId="org.eclipse.e4.legacy.ide.application">
+    <elements xsi:type="commands:Command" xmi:id="_Fynt8PDJEe2AMplUbq0MIQ" elementId="org.eclipse.cdt.lsp.editor.ui.toggle_source_and_header" commandName="Toggle Source/Header"/>
+  </fragments>
+  <fragments xsi:type="fragment:StringModelFragment" xmi:id="_4WhfwPDJEe2AMplUbq0MIQ" featurename="handlers" parentElementId="org.eclipse.e4.legacy.ide.application">
+    <elements xsi:type="commands:Handler" xmi:id="_FuqlkPDKEe2AMplUbq0MIQ" elementId="org.eclipse.cdt.lsp.editor.ui.toggle_source_and_header" contributionURI="bundleclass://org.eclipse.cdt.lsp.editor.ui/org.eclipse.cdt.lsp.editor.ui.commands.ToggleSourceAndHeaderCommandHandler" command="_Fynt8PDJEe2AMplUbq0MIQ"/>
+  </fragments>
+</fragment:ModelFragments>
