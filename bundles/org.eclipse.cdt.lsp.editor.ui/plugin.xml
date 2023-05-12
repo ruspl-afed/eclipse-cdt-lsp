@@ -59,6 +59,7 @@
       </server>
    </extension>
 
+   <!-- AF: this should go to E4 -->
   <extension
          point="org.eclipse.ui.commands">
       <command
@@ -66,6 +67,7 @@
             name="%Commands.ToggleSourceAndHeader.name">
       </command>
    </extension>
+   <!-- AF: this should go to E4 -->
    <extension
          point="org.eclipse.ui.bindings">
       <key
@@ -75,6 +77,7 @@
             sequence="M1+TAB">
       </key>
    </extension>
+   <!-- AF: this should go to E4 as well, but it is more tricky -->
    <extension
          point="org.eclipse.ui.menus">
       <menuContribution
